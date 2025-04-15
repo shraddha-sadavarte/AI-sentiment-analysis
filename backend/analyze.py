@@ -1,23 +1,22 @@
 import sys
+import json
 from textblob import TextBlob
 
-# Get text input from command line argument
-text = sys.argv[1]
+def analyze_sentiment(text):
+    blob = TextBlob(text)
+    sentiment = blob.sentiment
+    result = {
+        "polarity": sentiment.polarity,
+        "subjectivity": sentiment.subjectivity,
+        "label": "positive" if sentiment.polarity > 0 else "negative" if sentiment.polarity < 0 else "neutral"
+    }
+    return result
 
-# Perform sentiment analysis using TextBlob
-blob = TextBlob(text)
-polarity = blob.sentiment.polarity
-
-# Determine sentiment based on polarity
-if polarity > 0:
-    sentiment = "Positive"
-elif polarity < 0:
-    sentiment = "Negative"
-else:
-    sentiment = "Neutral"
-
- #Confidence is the absolute value of polarity (from 0 to 1)
-confidence = abs(polarity)
-
-# Return sentiment and confidence score (polarity as confidence)
-print(f"{sentiment}|{confidence}")
+if __name__ == "__main__":
+    try:
+        text = sys.argv[1]
+        result = analyze_sentiment(text)
+        print(json.dumps(result))
+    except Exception as e:
+        print(json.dumps({"error": str(e)}))
+        sys.exit(1)
