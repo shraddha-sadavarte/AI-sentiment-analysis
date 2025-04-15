@@ -1,37 +1,20 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import './App.css';
+import React, { useState, useEffect } from 'react';
+import SentimentForm from './components/SentimentForm.jsx';
+import ThemeToggle from './components/ThemeToggle.jsx';
+import './themes.css';
 
 function App() {
-  const [text, setText] = useState('');
-  const [sentiment, setSentiment] = useState('');
+  const [theme, setTheme] = useState('light');
 
-  const analyzeSentiment = async () => {
-    if (!text) return;
-    try {
-      const res = await axios.post('http://localhost:5000/analyze', { text });
-      console.log("Response from backend:", res.data); 
-      setSentiment(res.data.sentiment);
-    } catch (error) {
-      console.error("Error analyzing sentiment:", error);
-    }
-  };
+  useEffect(() => {
+    document.body.setAttribute('data-theme', theme);
+  }, [theme]);
+
   return (
-    <div className="App">
+    <div style={{ padding: '20px' }}>
+      <ThemeToggle theme={theme} setTheme={setTheme} />
       <h1>Sentiment Analyzer</h1>
-      <textarea
-        rows="5"
-        placeholder="Enter text or tweet..."
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-      />
-      <br />
-      <button onClick={analyzeSentiment}>Analyze</button>
-      {loading && <div>Analyzing...</div>}
-      <div className={`result ${sentiment.toLowerCase()}`}>
-        Sentiment: {sentiment} {sentiment === "Positive" ? "😊" : sentiment === "Negative" ? "😞" : "😐"}
-      </div>
-
+      <SentimentForm />
     </div>
   );
 }

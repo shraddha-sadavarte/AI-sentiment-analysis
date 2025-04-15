@@ -1,0 +1,18 @@
+:root {
+    --bg: #ffffff;
+    --text: #000000;
+    --input-bg: #f0f0f0;
+  }
+  
+  [data-theme='dark'] {
+    --bg: #121212;
+    --text: #ffffff;
+    --input-bg: #1e1e1e;
+  }
+  
+  body {
+    background-color: var(--bg);
+    color: var(--text);
+    transition: 0.3s;
+  }
+  
