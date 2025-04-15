@@ -1,0 +1,1 @@
+echo textblob > requirements.txt
