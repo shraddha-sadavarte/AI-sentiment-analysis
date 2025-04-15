@@ -27,11 +27,11 @@ function App() {
       />
       <br />
       <button onClick={analyzeSentiment}>Analyze</button>
-      {sentiment && (
-        <div className="result">
-          Sentiment: <strong>{sentiment}</strong>
-        </div>
-      )}
+      {loading && <div>Analyzing...</div>}
+      <div className={`result ${sentiment.toLowerCase()}`}>
+        Sentiment: {sentiment} {sentiment === "Positive" ? "😊" : sentiment === "Negative" ? "😞" : "😐"}
+      </div>
+
     </div>
   );
 }
