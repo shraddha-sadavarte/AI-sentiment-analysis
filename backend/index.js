@@ -5,7 +5,11 @@ import { spawn } from 'child_process';
 const app = express();
 const PORT = 5000;
 
-app.use(cors());
+app.use(cors({
+    origin: '*', // You can replace '*' with 'http://localhost:5173' for more security
+    methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type'],
+  }));
 app.use(express.json());
 
 app.post('/analyze', (req, res) => {
