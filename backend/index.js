@@ -9,33 +9,33 @@ app.use(cors());
 app.use(express.json());
 
 app.post('/analyze', (req, res) => {
-  const { text } = req.body;
+  const text = req.body.text;
+  console.log("Received text:", text);
 
+  // Pass the text to the Python script for analysis
   const python = spawn('python', ['analyze.py', text]);
 
   let result = '';
-  let error = '';
-
   python.stdout.on('data', (data) => {
     result += data.toString();
   });
 
-  python.stderr.on('data', (data) => {
-    error += data.toString();
+  python.on('close', () => {
+    console.log("Python script result:", result);
+    
+    // The result from Python will be in "sentiment|confidence" format
+    const [sentiment, confidence] = result.trim().split('|');
+    
+    // If confidence is not a valid number, set it to 0
+    const confidenceScore = isNaN(confidence) ? 0 : parseFloat(confidence);
+
+    // Return sentiment and confidence score to the frontend
+    res.json({ sentiment, confidence: confidenceScore });
   });
 
-  python.on('close', (code) => {
-    if (code !== 0) {
-      console.error('Python error:', error);
-      return res.status(500).json({ error: 'Python script failed', details: error });
-    }
-
-    try {
-      const parsedResult = JSON.parse(result);
-      res.json(parsedResult);
-    } catch (e) {
-      res.status(500).json({ error: 'Invalid response from Python script', raw: result });
-    }
+  python.stderr.on('data', (data) => {
+    console.error("Python error:", data.toString());
+    res.status(500).json({ error: 'Error analyzing text' });
   });
 });
 
