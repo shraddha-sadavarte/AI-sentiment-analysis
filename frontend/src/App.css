@@ -1,0 +1,23 @@
+.App {
+  text-align: center;
+  margin-top: 50px;
+  font-family: Arial;
+}
+
+textarea {
+  width: 300px;
+  padding: 10px;
+  font-size: 16px;
+}
+
+button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.result {
+  margin-top: 20px;
+  font-size: 20px;
+}
